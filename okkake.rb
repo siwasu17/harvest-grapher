@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # -*- encoding: utf-8 -*-
 require 'sinatra/base'
-#require 'sinatra/reloader'
+require 'sinatra/reloader'
 require 'redis'
 require 'haml'
 
@@ -10,11 +10,13 @@ class Okkake < Sinatra::Base
 	enable :logging
 
 	# Sinatra再起動が不要になる(gem入れたときは別)
-#	set :server, "webrick"
-#	register Sinatra::Reloader
+	# herokuへ入れるときはコメントアウトすること
+	set :server, "webrick"
+	register Sinatra::Reloader
 
 	get '/' do
 		"Hello world, it's #{Time.now} at the server!"
+		haml :top
 	end
 
 	get '/:id' do
