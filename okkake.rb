@@ -18,13 +18,19 @@ class Okkake < Sinatra::Base
 	get '/' do  
 	  @config = YAML.load_file(File.expand_path(File.dirname(__FILE__) + '/redis-config.yml'))
     @now_time = Time.now.to_i
+    # 表示する値の数
+    @show_count = 16
+    # 出力する秒数の間隔
+    @span = 5
+    # 間隔に合うように時間調整
+    adjust = @now_time % @span
+    @now_time = @now_time - adjust
+
 	  redis = Redis.new(
       :host=>@config['HOST'],
       :port=>@config['PORT'],
       :password=>@config['PASSWORD'])
     @dot = {}
-    @show_count = 10
-    @span = 5
     # 過去データをRedisから読み込み
     ((@now_time - (@span*@show_count))..@now_time).step(@span).each do |t|
       val = redis.get(t)
