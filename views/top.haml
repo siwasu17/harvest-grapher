@@ -8,12 +8,43 @@
     %script{:type => "text/javascript",
             :src => "js/bootstrap.min.js"}
     %link{:href=>"css/bootstrap.min.css",:rel=>"stylesheet" }
+    %script{:type => "text/javascript",
+            :src => "http://code.highcharts.com/highcharts.js"}
+    :javascript
+      $(function(){
+        var my_chart = new Highcharts.Chart({
+          chart: {
+            renderTo: 'graph-pane',
+            type: 'line'
+          },
+          title: {
+            text: 'Resource monitor'
+          },
+          xAxis: {
+            // unixtime -> H:M:sへの変換
+            categories: #{@dot.keys.map{|k| Time.at(k).to_a[0..2].reverse.join(":") }}
+          },
+          yAxis: {
+            title: {
+              text: 'Load'
+            }
+          },
+          series: [{
+            name: 'load',
+            data: #{@dot.values.reverse}
+          }]
+        });
+      });
     %title OKKAKE!
   %body
     %div{:class => "container"}
       %div{:class => "jumbotron"}
         %h1 OKKAKE!
       %div{:class => "row-fluid"}
-        %div{:class => "span8"}
-          %h3 Load avg
-
+        %div{:class => "span12"}
+          %h3 Resource
+          %h5 UNIX TIME: #{@now_time}
+          %div
+            - @dot.each do |d|
+              #{d[1]}
+          %div{:id=>"graph-pane", :width=>"100%", :height=>"400px" }
