@@ -1,2 +1,2 @@
 require './okkake'
-run Sinatra::Base
+run Okkake
