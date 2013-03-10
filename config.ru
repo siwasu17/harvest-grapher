@@ -1,2 +1,2 @@
-require './hello'
+require './okkake'
 run Sinatra::Application
